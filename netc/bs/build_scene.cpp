@@ -42,7 +42,7 @@ namespace ygopro
     void BuilderCard::RefreshVertices() {
         vertices.resize(8);
         indices.resize(12);
-        vt2::Fill(&vertices[0], pos, {size.x, -size.y}, card_tex, 0xffffffff, hl);
+        vt2::Fill(vertices.data(), pos, {size.x, -size.y}, card_tex, 0xffffffff, hl);
         if(limit < 3) {
             auto& lti = limit_tex[limit];
             vt2::Fill(&vertices[4], pos + v2f{-icon_offset, icon_offset}, {icon_size.x, -icon_size.y}, lti);
