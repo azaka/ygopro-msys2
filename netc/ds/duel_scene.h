@@ -160,8 +160,8 @@ namespace ygopro
         inline uint32_t GetRefId() { return ref_id; }
         inline void SetCenter(v2i pos, v2f prop = {0.0f, 0.0f}) { center_pos = pos; center_prop = prop; SetUpdate(); }
         inline void SetRotation(float rot) {
-            rot_matrix[0] = std::cosf(rot);
-            rot_matrix[1] = std::sinf(rot);
+            rot_matrix[0] = cosf(rot);
+            rot_matrix[1] = sinf(rot);
             SetUpdate();
         }
         inline v2i RotPoint(v2i point, v2i center) {

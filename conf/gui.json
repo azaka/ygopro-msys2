@@ -6,7 +6,7 @@
     "count" : [12, 12]
   },
   "fonts" : {
-    "default" : ["./conf/wqy-zenhei.ttc", 28, "regular", 0, 24]
+    "default" : ["./conf/simhei.ttf", 28, "regular", 0, 24]
   },
   "image" : {
     "sprite_offset" : [0, 0, 0, 0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0]

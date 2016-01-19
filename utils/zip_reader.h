@@ -157,14 +157,25 @@ public:
     }
     
     size_t GetFileLength(const std::string& filename) {
+#if 1
+        // filename is stored as zipfilename/image
+        // prepend with zipname so lookup succeeds
+        // zipname is pics2 for now
+        auto iter = entries.find(std::string("pics2/") + filename);
+#else
         auto iter = entries.find(filename);
+#endif
         if(iter == entries.end())
             return 0;
         return iter->second.file_size;
     }
     
     std::pair<uint8_t*, size_t> ReadFile(const std::string& filename) {
+#if 1
+        auto iter = entries.find(std::string("pics2/") + filename);
+#else
         auto iter = entries.find(filename);
+#endif
         if(iter == entries.end())
             return std::make_pair(nullptr, 0);
         if(iter->second.datas != nullptr)

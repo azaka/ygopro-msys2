@@ -192,6 +192,10 @@ namespace ygopro
             }
 		});
         std::sort(image_files.begin(), image_files.end());
+        std::cout << "All image files: \n" << std::endl;
+        std::for_each(image_files.begin(), image_files.end(), [](std::string &name) {
+            std::cout << name << std::endl;
+        });
         imageZip.Load(image_files);
         image_render = std::make_shared<base::SimpleTextureRenderer>();
         image_render->SetFlip(true);

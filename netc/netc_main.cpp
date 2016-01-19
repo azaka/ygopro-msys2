@@ -35,13 +35,17 @@ int32_t node2int(jaweson::JsonValue& node) {
 };
 
 int32_t main(int32_t argc, char* argv[]) {
-    if(!glfwInit())
+    if(!glfwInit()) {
+        std::cout << "glfwinit failed" << std::endl;
         return 0;
+    }
     {
         TextFile textfile;
         textfile.Load("common.json");
-        if(!commonCfg.parse(textfile.Data(), textfile.Length()))
+        if(!commonCfg.parse(textfile.Data(), textfile.Length())) {
+            std::cout << "failed to parse common.json" << std::endl;
             return 0;
+        }
         for(int32_t i = 1; i < argc; ++i) {
             std::string argstr = FileSystem::LocalCharsetToUTF8(argv[i]);
             if(argstr.length() < 2)
@@ -76,14 +80,17 @@ int32_t main(int32_t argc, char* argv[]) {
     int32_t vsync = node2int(commonCfg["vertical_sync"]);
 	if(fsaa)
 		glfwWindowHint(GLFW_SAMPLES, fsaa);
+#if 0
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
     auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     GLFWwindow* window = glfwCreateWindow(width, height, "Ygopro", nullptr, nullptr);
     if (!window) {
+        std::cout << "cannot create window" << std::endl;
         glfwTerminate();
         return 0;
     }
@@ -217,9 +224,11 @@ int32_t main(int32_t argc, char* argv[]) {
     SceneMgr::Get().SetSceneSize({bwidth, bheight});
     SceneMgr::Get().SetFrameRate(node2int(commonCfg["frame_rate"]));
     
-//    auto sc = std::make_shared<BuildScene>(_2dshader.get());
+#if 1
+    auto sc = std::make_shared<BuildScene>(_2dshader.get());
+#else
     auto sc = std::make_shared<DuelScene>(_2dshader.get(), _3dshader.get());
-
+#endif
     SceneMgr::Get().SetScene(sc);
     SceneMgr::Get().InitFrameControler();
     SceneMgr::Get().SetFrameRate(60);

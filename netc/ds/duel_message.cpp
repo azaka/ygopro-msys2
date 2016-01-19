@@ -1260,11 +1260,11 @@ namespace ygopro
                 aura2->SetColor(sgui::SGJsonUtil::ConvertRGBA(param_node[5]));
                 auto action = std::make_shared<LerpAnimator<int64_t>>(1000, [rct, aura1, aura2, pcard](double t) ->bool {
                     uint32_t cl = (t > 0.5f) ? ((int32_t)(255 * (2 - t * 2)) << 24) : 0xff000000;
-                    float rad1 = rct[0] * (1 - t) + rct[1] * t;
-                    aura1->SetSize({rad1, rad1});
+                    float rad1_val = rct[0] * (1 - t) + rct[1] * t;
+                    aura1->SetSize({rad1_val, rad1_val});
                     aura1->SetColor((aura1->color & 0xffffff) | cl);
-                    float rad2 = (t > 0.5f) ? (rct[3] * (2 - t * 2) + rct[2] * (t - 0.5f) * 2) : (rct[2] * (1 - t * 2) + rct[3] * t * 2);
-                    aura2->SetSize({rad2, rad2});
+                    float rad2_val = (t > 0.5f) ? (rct[3] * (2 - t * 2) + rct[2] * (t - 0.5f) * 2) : (rct[2] * (1 - t * 2) + rct[3] * t * 2);
+                    aura2->SetSize({rad2_val, rad2_val});
                     aura2->SetColor((aura2->color & 0xffffff) | cl);
                     aura2->SetRotation(pcard->rotation * glm::angleAxis(3.1415926f * (float)t, glm::vec3(0.0f, 0.0f, 1.0f)));
                     uint32_t hl = (t > 0.5f) ? (((int32_t)(240 * (2 - t * 2)) << 24) | 0xffffff) : (((int32_t)(240 * t * 2) << 24) | 0xffffff);
