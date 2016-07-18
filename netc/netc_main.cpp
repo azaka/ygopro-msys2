@@ -224,7 +224,7 @@ int32_t main(int32_t argc, char* argv[]) {
     SceneMgr::Get().SetSceneSize({bwidth, bheight});
     SceneMgr::Get().SetFrameRate(node2int(commonCfg["frame_rate"]));
     
-#if 1
+#if 0
     auto sc = std::make_shared<BuildScene>(_2dshader.get());
 #else
     auto sc = std::make_shared<DuelScene>(_2dshader.get(), _3dshader.get());
