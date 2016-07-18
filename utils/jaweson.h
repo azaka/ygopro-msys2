@@ -111,7 +111,7 @@ namespace jaweson
                     }
                 }
             }
-            return std::move(result);
+            return result;
         }
         
         static inline uint8_t get_hex_value(uint8_t ch) {
@@ -837,6 +837,10 @@ namespace jaweson
                 return nullptr;
             }
             
+#undef RETURN_ERR
+            
+#define RETURN_ERR(x) {error_msg = x; return false; }
+            
             bool parse_string(std::string& parse_str) {
                 static std::vector<char> result_buffer;
                 result_buffer.resize(0);
@@ -881,6 +885,8 @@ namespace jaweson
                 }
                 return nullptr;
             }
+            
+#undef RETURN_ERR
             
             JsonType* parse_value() {
                 uint32_t token_type = check_next_token();

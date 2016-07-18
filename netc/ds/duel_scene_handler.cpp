@@ -90,6 +90,12 @@ namespace ygopro
         AddCard(84013237, CardPosInfo(0, 0x4, 1, 0x1))->UpdatePosition(0);
         for(int32_t i = 0; i < 3; ++i)
             AddCard(83764718, CardPosInfo(0, 0x2, 1, 0x1))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 0, 0))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 1, 0))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 2, 0))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 3, 0))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 4, 0))->UpdatePosition(0);
+        AddCard(84013237, CardPosInfo(0, 0x1, 5, 0))->UpdatePosition(0);
         AddCard(84013237, CardPosInfo(0, 0x84, 1, 0))->UpdatePosition(0);
         AddCard(84013237, CardPosInfo(0, 0x84, 1, 0))->UpdatePosition(0);
         AddCard(84013237, CardPosInfo(0, 0x84, 1, 0))->UpdatePosition(0);
@@ -101,6 +107,8 @@ namespace ygopro
         AddCard(97268402, CardPosInfo(0, 0x10, 2, 0xa))->UpdatePosition(0);
         AddCard(97268402, CardPosInfo(0, 0x10, 2, 0xa))->UpdatePosition(0);
         AddCard(84013237, CardPosInfo(0, 0x10, 2, 0xa))->UpdatePosition(0);
+        AddCard(83764718, CardPosInfo(1, 0x4, 3, 0x1))->UpdatePosition(0);
+        AddCard(97268402, CardPosInfo(1, 0x4, 4, 0x1))->UpdatePosition(0);
         for(auto& pc : g_player[0].hand)
             pc->UpdatePosition(0);
     }
@@ -740,6 +748,24 @@ namespace ygopro
                 else
                     g_player[pid].field_blocks[s + 5]->SetTexcoord(s_tex);
             }
+        }
+    }
+    
+    std::shared_ptr<FieldSprite> DuelSceneHandler::AddAttackSprite(v3f trans, glm::quat rot) {
+        auto ptr = duel_scene->AddFieldSprite();
+        ptr->SetSize(sgui::SGJsonUtil::ConvertVec2<float>(layoutCfg["attack icon size"]));
+        ptr->SetTexture(ImageMgr::Get().GetRawMiscTexture());
+        ptr->SetTexcoord(ImageMgr::Get().GetTexture("attack"));
+        ptr->SetTranslation(trans);
+        ptr->SetRotation(rot);
+        g_duel.attack_sprite.push_back(ptr.get());
+        return ptr;
+    }
+    
+    void DuelSceneHandler::ClearAttackSprite() {
+        for(auto& fs : g_duel.attack_sprite) {
+            duel_scene->RemoveFieldSprite(fs);
+            SceneMgr::Get().RemoveAction(fs);
         }
     }
     

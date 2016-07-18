@@ -39,7 +39,7 @@ public:
         std::string str;
         str.insert(str.end(), ptr, endptr);
         ptr = endptr;
-        return std::move(str);
+        return str;
     }
     
     inline void Read(void* buf, size_t sz) {
@@ -81,6 +81,14 @@ public:
     
     inline void Write(const std::string& str) {
         buffer_ptr->insert(buffer_ptr->end(), &str.front(), &str.back());
+    }
+    
+    inline void WriteRepeat(uint8_t val, size_t count) {
+        buffer_ptr->insert(buffer_ptr->end(), count, val);
+    }
+    
+    inline void WriteBuffer(uint8_t* ptr, size_t count) {
+        buffer_ptr->insert(buffer_ptr->end(), ptr, ptr + count);
     }
     
 protected:

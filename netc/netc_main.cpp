@@ -161,7 +161,7 @@ int32_t main(int32_t argc, char* argv[]) {
         }
     });
     glfwSetCharCallback(window, [](GLFWwindow* wnd, uint32_t unichar) {
-        sgui::SGGUIRoot::GetSingleton().InjectCharEvent({unichar});
+        sgui::SGGUIRoot::GetSingleton().InjectCharEvent(unichar);
     });
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* wnd, int32_t width, int32_t height) {
         int32_t x, y;
@@ -215,7 +215,7 @@ int32_t main(int32_t argc, char* argv[]) {
     sgui::SGGUIRoot::GetSingleton().SetShader(_2dshader.get());
     sgui::SGGUIRoot::GetSingleton().SetClipboardCallback([window]()->std::string {
         std::string str = glfwGetClipboardString(window);
-        return std::move(str);
+        return str;
     }, [window](const std::string& str) {
         glfwSetClipboardString(window, str.c_str());
     });

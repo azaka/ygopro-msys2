@@ -18,45 +18,55 @@ namespace ygopro
         switch(param) {
             case 1: {
                 auto dm = std::make_shared<DuelMessage>();
-                dm->msg_type = MSG_SUMMONING;
+                dm->msg_type = MSG_ATTACK;
                 BufferWriter writer(dm->msg_buffer);
-                writer.Write<uint32_t>(84013237);
+                //writer.Write<uint32_t>(84013237);
                 writer.Write<uint32_t>(CardPosInfo(0, 0x04, 1, 0).info);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x04, 3, 0).info);
                 messages.PushCommand(dm);
                 break;
             }
             case 2: {
                 auto dm = std::make_shared<DuelMessage>();
-                dm->msg_type = MSG_SPSUMMONING;
+                dm->msg_type = MSG_CONFIRM_CARDS;
                 BufferWriter writer(dm->msg_buffer);
+                writer.Write<uint8_t>(0);
+                writer.Write<uint8_t>(6);
                 writer.Write<uint32_t>(84013237);
-                writer.Write<uint32_t>(CardPosInfo(0, 0x04, 1, 0).info);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 0, 0).info);
+                writer.Write<uint32_t>(84013237);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 1, 0).info);
+                writer.Write<uint32_t>(84013237);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 2, 0).info);
+                writer.Write<uint32_t>(84013237);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 3, 0).info);
+                writer.Write<uint32_t>(84013237);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 4, 0).info);
+                writer.Write<uint32_t>(84013237);
+                writer.Write<uint32_t>(CardPosInfo(0, 0x01, 5, 0).info);
                 messages.PushCommand(dm);
                 break;
             }
             case 3: {
-                auto dm = std::make_shared<DuelMessage>();
-                dm->msg_type = MSG_FLIPSUMMONING;
-                BufferWriter writer(dm->msg_buffer);
-                writer.Write<uint32_t>(84013237);
-                writer.Write<uint32_t>(CardPosInfo(0, 0x04, 1, 0).info);
-                messages.PushCommand(dm);
+                for(uint32_t i = 0; i < 5; ++i) {
+                    auto dm = std::make_shared<DuelMessage>();
+                    dm->msg_type = MSG_BATTLE;
+                    BufferWriter writer(dm->msg_buffer);
+                    writer.Write<uint32_t>(CardPosInfo(0, 0x04, 1, 0).info);
+                    writer.WriteRepeat(0, 9);
+                    writer.Write<uint32_t>(CardPosInfo(1, 0x04, i, 0).info);
+                    writer.WriteRepeat(0, 9);
+                    messages.PushCommand(dm);
+                }
                 break;
             }
             case 4: {
                 auto dm = std::make_shared<DuelMessage>();
-                dm->msg_type = MSG_SET;
+                dm->msg_type = MSG_DECLEAR_ATTRIB;
                 BufferWriter writer(dm->msg_buffer);
-                writer.Write<uint32_t>(84013237);
-                writer.Write<uint32_t>(CardPosInfo(0, 0x04, 3, 0).info);
-                messages.PushCommand(dm);
-                break;
-            }
-            case 5: {
-                auto dm = std::make_shared<DuelMessage>();
-                dm->msg_type = MSG_CHAIN_NEGATED;
-                BufferWriter writer(dm->msg_buffer);
-                writer.Write<uint8_t>(1);
+                writer.Write<uint8_t>(0);
+                writer.Write<uint8_t>(3);
+                writer.Write<uint32_t>(0x3f);
                 messages.PushCommand(dm);
                 break;
             }
@@ -1622,99 +1632,70 @@ namespace ygopro
                 break;
             }
             case MSG_ATTACK: {
-//                int ca = mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
-//                int la = BufferIO::ReadInt8(pbuf);
-//                int sa = BufferIO::ReadInt8(pbuf);
-//                BufferIO::ReadInt8(pbuf);
-//                mainGame->dField.attacker = mainGame->dField.GetCard(ca, la, sa);
-//                int cd = mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
-//                int ld = BufferIO::ReadInt8(pbuf);
-//                int sd = BufferIO::ReadInt8(pbuf);
-//                BufferIO::ReadInt8(pbuf);
-//                if(mainGame->dInfo.isReplay && mainGame->dInfo.isReplaySkiping)
-//                    return true;
-//                float sy;
-//                if (ld != 0) {
-//                    mainGame->dField.attack_target = mainGame->dField.GetCard(cd, ld, sd);
-//                    myswprintf(event_string, dataManager.GetSysString(1619), dataManager.GetName(mainGame->dField.attacker->code),
-//                               dataManager.GetName(mainGame->dField.attack_target->code));
-//                    float xa = mainGame->dField.attacker->curPos.X;
-//                    float ya = mainGame->dField.attacker->curPos.Y;
-//                    float xd = mainGame->dField.attack_target->curPos.X;
-//                    float yd = mainGame->dField.attack_target->curPos.Y;
-//                    sy = (float)sqrt((xa - xd) * (xa - xd) + (ya - yd) * (ya - yd)) / 2;
-//                    mainGame->atk_t = vector3df((xa + xd) / 2, (ya + yd) / 2, 0);
-//                    if (ca == 0)
-//                        mainGame->atk_r = vector3df(0, 0, -atan((xd - xa) / (yd - ya)));
-//                    else
-//                        mainGame->atk_r = vector3df(0, 0, 3.1415926 - atan((xd - xa) / (yd - ya)));
-//                } else {
-//                    myswprintf(event_string, dataManager.GetSysString(1620), dataManager.GetName(mainGame->dField.attacker->code));
-//                    float xa = mainGame->dField.attacker->curPos.X;
-//                    float ya = mainGame->dField.attacker->curPos.Y;
-//                    float xd = 3.95f;
-//                    float yd = 3.5f;
-//                    if (ca == 0)
-//                        yd = -3.5f;
-//                    sy = (float)sqrt((xa - xd) * (xa - xd) + (ya - yd) * (ya - yd)) / 2;
-//                    mainGame->atk_t = vector3df((xa + xd) / 2, (ya + yd) / 2, 0);
-//                    if (ca == 0)
-//                        mainGame->atk_r = vector3df(0, 0, -atan((xd - xa) / (yd - ya)));
-//                    else
-//                        mainGame->atk_r = vector3df(0, 0, 3.1415926 - atan((xd - xa) / (yd - ya)));
-//                }
-//                matManager.GenArrow(sy);
-//                mainGame->attack_sv = 0;
-//                mainGame->is_attacking = true;
-//                mainGame->WaitFrameSignal(40);
-//                mainGame->is_attacking = false;
+                CardPosInfo pattacker(LocalPosInfo(reader.Read<int32_t>()));
+                CardPosInfo ptarget(LocalPosInfo(reader.Read<int32_t>()));
+                auto& da = layoutCfg["direct attack"];
+                v3f dapos = {da[0].to_value<float>(), da[1].to_value<float>(), 0.0f};
+                if(ptarget.controler == 1)
+                    dapos.y = -dapos.y;
+                if(pattacker.controler > 1 || pattacker.sequence > 4 || ptarget.controler > 1 || (ptarget.location != 0 && ptarget.sequence > 4))
+                    break;
+                v3f startpos = g_player[pattacker.controler].field_blocks[pattacker.sequence]->translation;
+                v3f endpos = (ptarget.location != 0) ? g_player[ptarget.controler].field_blocks[ptarget.sequence]->translation : dapos;
+                startpos.z = 0.2f;
+                endpos.z = 0.2f;
+                glm::quat rot = glm::angleAxis(glm::atan(endpos.y - startpos.y, endpos.x - startpos.x) - 3.1415926f / 2.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+                ClearAttackSprite();
+                auto atk_sprite = AddAttackSprite(startpos, rot);
+                auto action = std::make_shared<LerpAnimator<int64_t, FieldSprite>>(300, atk_sprite, [startpos, endpos](FieldSprite* fs, double t) ->bool {
+                    auto pos = startpos * (1 - t) + endpos * t;
+                    fs->SetTranslation(pos);
+                    return true;
+                }, std::make_shared<TGenLinear<int64_t>>(300));
+                auto animate = std::make_shared<ActionSequence<int64_t>>(action, std::make_shared<ActionWait<int64_t>>(300));
+                SceneMgr::Get().PushAction(std::make_shared<ActionRepeat<int64_t>>(animate), atk_sprite.get());
                 break;
             }
             case MSG_BATTLE: {
-//                int ca = mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
-//                int la = BufferIO::ReadInt8(pbuf);
-//                int sa = BufferIO::ReadInt8(pbuf);
-//                BufferIO::ReadInt8(pbuf);
-//                int aatk = BufferIO::ReadInt32(pbuf);
-//                int adef = BufferIO::ReadInt32(pbuf);
-//                /*int da = */BufferIO::ReadInt8(pbuf);
-//                int cd = mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
-//                int ld = BufferIO::ReadInt8(pbuf);
-//                int sd = BufferIO::ReadInt8(pbuf);
-//                BufferIO::ReadInt8(pbuf);
-//                int datk = BufferIO::ReadInt32(pbuf);
-//                int ddef = BufferIO::ReadInt32(pbuf);
-//                /*int dd = */BufferIO::ReadInt8(pbuf);
-//                if(mainGame->dInfo.isReplay && mainGame->dInfo.isReplaySkiping)
-//                    return true;
-//                mainGame->gMutex.Lock();
-//                ClientCard* pcard = mainGame->dField.GetCard(ca, la, sa);
-//                if(aatk != pcard->attack) {
-//                    pcard->attack = aatk;
-//                    myswprintf(pcard->atkstring, L"%d", aatk);
-//                }
-//                if(adef != pcard->defence) {
-//                    pcard->defence = adef;
-//                    myswprintf(pcard->defstring, L"%d", adef);
-//                }
-//                if(ld) {
-//                    pcard = mainGame->dField.GetCard(cd, ld, sd);
-//                    if(datk != pcard->attack) {
-//                        pcard->attack = datk;
-//                        myswprintf(pcard->atkstring, L"%d", datk);
-//                    }
-//                    if(ddef != pcard->defence) {
-//                        pcard->defence = ddef;
-//                        myswprintf(pcard->defstring, L"%d", ddef);
-//                    }
-//                }
-//                mainGame->gMutex.Unlock();
+                // todo: set atk/def for battling cards
+                CardPosInfo pattacker(LocalPosInfo(reader.Read<int32_t>()));
+                // int32_t attacker_atk = reader.Read<int32_t>();
+                // int32_t attacker_def = reader.Read<int32_t>();
+                // int8_t attacker_destroyed = reader.Read<int8_t>();
+                reader.Skip(9);
+                CardPosInfo ptarget(LocalPosInfo(reader.Read<int32_t>()));
+                // int32_t target_atk = reader.Read<int32_t>();
+                // int32_t target_def = reader.Read<int32_t>();
+                // int8_t target_destroyed = reader.Read<int8_t>();
+                reader.Skip(9);
+                auto cattacker = GetCard(pattacker);
+                // auto ctarget = GetCard(ptarget);
+                if(cattacker == nullptr)
+                    break;
+                auto& da = layoutCfg["direct attack"];
+                v3f dapos = {da[0].to_value<float>(), da[1].to_value<float>(), 0.0f};
+                if(ptarget.controler == 1)
+                    dapos.y = -dapos.y;
+                auto startpos = cattacker->GetPositionInfo().first;
+                auto endpos = (ptarget.location != 0) ? g_player[ptarget.controler].field_blocks[ptarget.sequence]->translation : dapos;
+                if(endpos.z < startpos.z)
+                    endpos.z = startpos.z;
+                endpos = startpos * 0.1f + endpos * 0.9f;
+                auto action1 = std::make_shared<LerpAnimator<int64_t, FieldCard>>(100, cattacker, [startpos, endpos](FieldCard* pcard, double t) ->bool {
+                    auto pos = startpos * (1 - t) + endpos * t;
+                    pcard->SetTranslation(pos);
+                    return true;
+                }, std::make_shared<TGenLinear<int64_t>>(100));
+                auto action2 = std::make_shared<LerpAnimator<int64_t, FieldCard>>(500, cattacker, [startpos, endpos](FieldCard* pcard, double t) ->bool {
+                    auto pos = endpos * (1 - t) + startpos * t;
+                    pcard->SetTranslation(pos);
+                    return true;
+                }, std::make_shared<TGenMove<int64_t>>(500, 0.01));
+                auto animate = std::make_shared<ActionSequence<int64_t>>(action1, action2);
+                PushMessageActions(animate);
                 break;
             }
-            case MSG_ATTACK_NEGATED: {
-//                myswprintf(event_string, dataManager.GetSysString(1621), dataManager.GetName(mainGame->dField.attacker->code));
-                break;
-            }
+            case MSG_ATTACK_NEGATED: break;
             case MSG_DAMAGE_STEP_START: break;
             case MSG_DAMAGE_STEP_END: break;
             case MSG_MISSED_EFFECT: {
@@ -1732,7 +1713,9 @@ namespace ygopro
             case MSG_CREATE_RELATION: break;
             case MSG_RELEASE_RELATION: break;
             case MSG_TOSS_COIN: {
-                uint32_t playerid = LocalPlayer(reader.Read<uint8_t>());
+                // todo: add effects
+                // uint32_t playerid = LocalPlayer(reader.Read<uint8_t>());
+                reader.Skip(1);
                 uint32_t count = reader.Read<uint8_t>();
                 std::wstring str = To<std::wstring>(stringCfg["eui_logmsg_coin"].to_string());
                 for(uint32_t i = 0; i < count; ++i) {
@@ -1745,7 +1728,9 @@ namespace ygopro
                 break;
             }
             case MSG_TOSS_DICE: {
-                uint32_t playerid = LocalPlayer(reader.Read<uint8_t>());
+                // todo: add effects
+                // uint32_t playerid = LocalPlayer(reader.Read<uint8_t>());
+                reader.Skip(1);
                 uint32_t count = reader.Read<uint8_t>();
                 std::wstring str = To<std::wstring>(stringCfg["eui_logmsg_dice"].to_string());
                 for(uint32_t i = 0; i < count; ++i) {
@@ -1778,23 +1763,10 @@ namespace ygopro
                 break;
             }
             case MSG_DECLEAR_ATTRIB: {
-//                /*int player = */mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
-//                mainGame->dField.announce_count = BufferIO::ReadInt8(pbuf);
-//                int available = BufferIO::ReadInt32(pbuf);
-//                for(int i = 0, filter = 0x1; i < 7; ++i, filter <<= 1) {
-//                    mainGame->chkAttribute[i]->setChecked(false);
-//                    if(filter & available)
-//                        mainGame->chkAttribute[i]->setVisible(true);
-//                    else mainGame->chkAttribute[i]->setVisible(false);
-//                }
-//                if(select_hint)
-//                    myswprintf(textBuffer, L"%ls", dataManager.GetDesc(select_hint));
-//                else myswprintf(textBuffer, dataManager.GetSysString(562));
-//                select_hint = 0;
-//                mainGame->gMutex.Lock();
-//                mainGame->wANAttribute->setText(textBuffer);
-//                mainGame->PopupElement(mainGame->wANAttribute);
-//                mainGame->gMutex.Unlock();
+                reader.Skip(1);
+                uint32_t count = reader.Read<uint8_t>();
+                uint32_t available = reader.Read<uint32_t>();
+                OperationPanel::DeclearAttribute(available, count);
                 break;
             }
             case MSG_DECLEAR_CARD: {
