@@ -2,10 +2,12 @@
 #define _CARD_DATA_S_H_
 
 #include "../ocgcore/common.h"
+#ifdef __MINGW32__
+#include "../utils/singleton.h"
+#endif
 
 namespace ygopro
 {
-    
     class DataMgrS : public Singleton<DataMgrS> {
 	public:
         void LockData();
